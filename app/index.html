@@ -40,8 +40,8 @@
                             <a href="#" uib-dropdown-toggle>Users <b class="caret"></b></a>
                             <ul class="uib-dropdown-menu">
                                 <li><a href="#/register">Register</a></li>
-                               <li><a href="#/show">Show All</a></li>
-                               
+                                <li><a href="#/show">Show All</a></li>
+
                             </ul>
                         </li>
                         <li><a href="#/offers">Offers</a></li>
@@ -49,8 +49,8 @@
                             <a href="#" uib-dropdown-toggle>Contact <b class="caret"></b></a>
                             <ul class="uib-dropdown-menu">
                                 <li><a href="">d</a></li>
-                               <li><a href="#">jeden</a></li>
-                               
+                                <li><a href="#">jeden</a></li>
+
                             </ul>
                         </li>
                     </ul>
@@ -86,7 +86,8 @@
         <script src="bower_components/angular-mocks/angular-mocks.js" type="text/javascript"></script>
         <script src="bower_components/angular-formly-templates-bootstrap/dist/angular-formly-templates-bootstrap.js" type="text/javascript"></script>
         <script src="bower_components/angular-wizard/dist/angular-wizard.js" type="text/javascript"></script>
-         <script src="bower_components/lodash/dist/lodash.js" type="text/javascript"></script>
+        <script src="bower_components/angular-messages/angular-messages.js" type="text/javascript"></script>
+        <script src="bower_components/lodash/dist/lodash.js" type="text/javascript"></script>
         <script src="app.js"></script>
         <script src="home/home.js"></script>
         <script src="view2/view2.js"></script>
@@ -95,5 +96,37 @@
         <script src="components/version/version.js"></script>
         <script src="components/version/version-directive.js"></script>
         <script src="components/version/interpolate-filter.js"></script>
+
+        <script type="text/ng-template" id="validation.html">
+            <div class="alert-danger" ng-message="required">This field is required</div>
+            <div class="alert-danger" ng-message="minlength">Too short</div>
+            <div class="alert-danger" ng-message="maxlength">Too long</div>
+            <div class="alert-danger" ng-message="email">This email is already in use</div>
+        </script>
+        <script type="text/ng-template" id="input-template.html">
+            <input type="{{options.templateOptions.type || 'text'}}"
+            class="form-control"
+            id="{{id}}"
+            formly-dynamic-name="id"
+            formly-custom-validation="options.validators"
+            placeholder="{{options.templateOptions.placeholder}}"
+            aria-describedby="{{id}}_description"
+            ng-required="options.templateOptions.required"
+            ng-disabled="options.templateOptions.disabled"
+            ng-model="model[options.key]">
+        </script>
+        <script type="text/ng-template" id="checkbox-template.html">
+            <input type="checkbox"
+            id="{{id}}"
+            formly-dynamic-name="id"
+            formly-custom-validation="options.validators"
+            aria-describedby="{{id}}_description"
+            ng-required="options.templateOptions.required"
+            ng-disabled="options.templateOptions.disabled"
+            ng-model="model[options.key]">
+            {{options.templateOptions.label || 'Checkbox'}}
+            {{options.templateOptions.required ? '*' : ''}}
+        </script>
+
     </body>
 </html>

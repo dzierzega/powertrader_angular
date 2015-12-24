@@ -2,27 +2,29 @@
 
 
     <wizard on-finish="vm.finishWizard()"> 
-        <wz-step title="Step 1">
+        <wz-step title="Step 1" canexit="vm.exitValidation">
             <h2>Basic Information</h2>
             <formly-form model="vm.model" fields="vm.userFields.step1" form="vm.forms.step1">
                 <div style="text-align:right">
-                    <button type="submit" ng-disabled="vm.forms.step1.$invalid" wz-next class="btn btn-primary submit-button">Next</button>
+                    <button type="submit" ng-disabled="vm.forms.step1.$invalid " wz-next class="btn btn-primary submit-button">Next</button>
                 </div>
             </formly-form>
         </wz-step>
-        <wz-step title="Step 2">
+        <wz-step title="Step 2" canenter="vm.enterValidation">
             <h2>Detailed Information</h2>
             <formly-form model="vm.model" fields="vm.userFields.step2" form="vm.forms.step2">
-                <div style="text-align:right">
-                    <button type="submit" ng-disabled="vm.forms.step2.$invalid" wz-next class="btn btn-primary submit-button">Next</button>
+
+                <div >
+                    <button style="text-align:right;float:right;" type="submit" ng-disabled="vm.forms.step2.$invalid" wz-next class="btn btn-primary submit-button">Next</button>
+                    <button style="text-align:left" type="submit"  wz-previous class="btn btn-primary submit-button">Previous</button>
                 </div>
             </formly-form>
         </wz-step>
         <wz-step title="Confirm">
             <h2>Confirm</h2>
             <div>Username: {{vm.model.email}}</div>
-            <div>First Name: {{vm.model.firstName}}</div>
-            <div>Last Name: {{vm.model.lastName}}</div>
+            <div>First Name: {{vm.model.name}}</div>
+            <div>Last Name: {{vm.model.surname}}</div>
             <div style="text-align:right">
                 <button type="submit" ng-disabled="vm.form.$invalid" wz-finish class="btn btn-primary submit-button">Confirm</button>
             </div>
