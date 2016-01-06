@@ -138,7 +138,7 @@ angular.module('myApp.register', ['ngRoute', 'ngMessages'])
                                             template: "<div class='row'>"
                                         },
                                         {
-                                            className: "col-md-6",
+                                            className: "col-md-4",
                                             key: 'name',
                                             type: 'input',
                                             templateOptions: {
@@ -148,13 +148,23 @@ angular.module('myApp.register', ['ngRoute', 'ngMessages'])
                                                 required: true
                                             }
                                         }, {
-                                            className: "col-md-6",
+                                            className: "col-md-4",
                                             key: 'surname',
                                             type: 'input',
                                             templateOptions: {
                                                 type: 'text',
                                                 label: 'Last Name',
                                                 placeholder: 'Enter Last Name',
+                                                required: true
+                                            }
+                                        },{
+                                            className: "col-md-4",
+                                            key: 'username',
+                                            type: 'input',
+                                            templateOptions: {
+                                                type: 'text',
+                                                label: 'Username',
+                                                placeholder: 'Enter Username',
                                                 required: true
                                             }
                                         },
@@ -252,7 +262,8 @@ angular.module('myApp.register', ['ngRoute', 'ngMessages'])
                                             validators: {
                                                 passwordConfirm: {
                                                     expression: function (viewValue, modelValue, vm) {
-                                                        vm.form.formly_1_input_passwordConfirm_2.$validate();
+                                                        vm.form[vm.form.$name + '_input_passwordConfirm_2'].$validate();
+                                                      //  vm.form.formly_1_input_passwordConfirm_2.$validate();
                                                         return true;
                                                     },
                                                     message: '"Password and password confirmation must be the same!"'
@@ -275,10 +286,10 @@ angular.module('myApp.register', ['ngRoute', 'ngMessages'])
                                                 passwordConfirm: {
                                                     expression: function (viewValue, modelValue, vm) {
                                                         var value = modelValue || viewValue;
-                                                        if (vm.form.formly_1_input_password_1 && vm.form.formly_1_input_password_1.$viewValue === value) {
+                                                        if (vm.form[vm.form.$name + '_input_password_1'] && vm.form[vm.form.$name + '_input_password_1'].$viewValue === value) {
                                                             return true;
                                                         } else {
-                                                            return false
+                                                            return false;
                                                         }
                                                     },
                                                     message: '"Password and password confirmation must be the same!"'

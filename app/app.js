@@ -9,6 +9,7 @@ angular.module('myApp', [
   'ui.bootstrap',
   'mgo-angular-wizard',
   'myApp.home',
+  'myApp.login',
   'myApp.register',
   'myApp.view2',
   'myApp.offers'
