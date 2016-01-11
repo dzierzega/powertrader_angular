@@ -9,41 +9,34 @@ angular.module('myApp.login', ['ngRoute'])
                     controllerAs: 'vm'
                 });
                 $httpProvider.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';
+                
             }])
 
         .controller('LoginCtrl', ["$rootScope", "$scope", "$http", "$location", function ($rootScope, $scope, $http, $location) {
-
+                // co musi byc wysylane:
+                // authorization - credidentiale
+                // X-Auth-Token - z endpointa /token
+                //X-XSRF-TOKEN - to co dostajesz z serwera
                 var authenticate = function (credentials, callback) {
-
+                    $rootScope.headers.Authorization = "Basic "
+                                + btoa(credentials.username + ":" + credentials.password);
                     var headers = credentials ? {Authorization: "Basic "
                                 + btoa(credentials.username + ":" + credentials.password)
                     } : {};
 
                     $http({
                         method: 'GET',
-                        headers: headers,
+                        headers: $rootScope.headers,
                         url: 'http://localhost:8080/login/'
                     }).success(function (data) {
                         if (data.name) {
                             $rootScope.authenticated = true;
                             $http({
                                 method: 'GET',
-                                url: 'http://localhost:8080/offer/1',
-                                headers: headers,                                
+                                url: 'http://localhost:8080/token',
+                                headers: $rootScope.headers,                                
                             }).success(function (response) {
-                                $http({
-                                    method: 'GET',
-                                    url: 'http://localhost:8080/offer/',
-                                    headers: headers
-//                                    headers: {
-//                                        'X-Auth-Token': response.token
-//                                    }
-                                }).success(function(response){
-                                    alert(response);
-                                }).error(function(response){
-                                   alert(response); 
-                                });
-                                $rootScope.token = response.token;
+                                $rootScope.headers['X-Auth-Token'] = response.token;
                             }).error(function (response) {
                                 alert('unable to get token');
                             });

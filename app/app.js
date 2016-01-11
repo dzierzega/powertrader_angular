@@ -4,6 +4,7 @@
 angular.module('myApp', [
   'ngRoute',
   'ngAnimate',
+  'ngCookies',
   'formly',
   'formlyBootstrap',
   'ui.bootstrap',
@@ -14,6 +15,11 @@ angular.module('myApp', [
   'myApp.view2',
   'myApp.offers'
 ]).
-config(['$routeProvider', function($routeProvider) {
+config(['$routeProvider','$httpProvider', function($routeProvider,$httpProvider) {
   $routeProvider.otherwise({redirectTo: '/home'});
-}]);
+  $httpProvider.defaults.xsrfCookieName = '_csrf';
+  $httpProvider.defaults.xsrfHeaderName = 'X-XSRF-TOKEN';
+  $httpProvider.defaults.withCredentials = true;
+}]).run(function($rootScope) {
+    $rootScope.headers = {};
+});

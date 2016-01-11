@@ -107,12 +107,13 @@ angular.module('myApp.register', ['ngRoute', 'ngMessages'])
                 }
             });
         })
-        .config(['$routeProvider', function ($routeProvider) {
+        .config(['$routeProvider',"$httpProvider", function ($routeProvider,$httpProvider) {
                 $routeProvider.when('/register', {
                     templateUrl: 'register/register.html',
                     controller: 'RegisterCtrl',
                     controllerAs: 'vm'
                 });
+                 $httpProvider.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';
             }])
 
         .controller('RegisterCtrl', ['$http', '$timeout', '$q', function ($http, $timeout, $q) {

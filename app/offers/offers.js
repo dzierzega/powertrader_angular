@@ -15,9 +15,7 @@ angular.module('myApp.offers', ['ngRoute'])
                 $http({
                     method: 'GET',
                      url: 'http://localhost:8080/offer/',
-                     headers: {
-                            'X-Auth-Token': $rootScope.token
-                        }
+                     headers: $rootScope.headers
                 }).then(function successCallback(response) {
                     alert(response.data);
                 }, function errorCallback(response) {

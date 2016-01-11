@@ -22,7 +22,7 @@
     <body>
         <nav class="navbar-inverse">
 
-            <div class="container" >
+            <div class="container" ng-controller="homeCtrl">
                 <div class="navbar-header">
                     <button type="button" class="navbar-toggle" ng-click="isCollapsed = !isCollapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
                         <span class="sr-only">Toggle navigation</span>
@@ -40,6 +40,7 @@
                             <a href="#" uib-dropdown-toggle>Users <b class="caret"></b></a>
                             <ul class="uib-dropdown-menu">
                                 <li><a href="#/login">Login</a></li>
+                                <li><a href="" ng-click="logout()">Logout</a></li>
                                 <li><a href="#/register">Register</a></li>
                                 <li><a href="#/show">Show All</a></li>
 
@@ -89,6 +90,7 @@
         <script src="bower_components/angular-wizard/dist/angular-wizard.js" type="text/javascript"></script>
         <script src="bower_components/angular-messages/angular-messages.js" type="text/javascript"></script>
         <script src="bower_components/lodash/dist/lodash.js" type="text/javascript"></script>
+        <script src="bower_components/angular-cookies/angular-cookies.js"></script>
         <script src="app.js"></script>
         <script src="home/home.js"></script>
         <script src="login/login.js"></script>
