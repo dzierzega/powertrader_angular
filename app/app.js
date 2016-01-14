@@ -9,6 +9,8 @@ angular.module('myApp', [
     'formlyBootstrap',
     'ui.bootstrap',
     'mgo-angular-wizard',
+    'myApp.responseService',
+    'myApp.userService',
     'myApp.home',
     'myApp.login',
     'myApp.register',
@@ -21,18 +23,29 @@ angular.module('myApp', [
 //  $httpProvider.defaults.xsrfHeaderName = 'X-XSRF-TOKEN';
                 $httpProvider.defaults.withCredentials = true;
                 $httpProvider.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';
+                $httpProvider.defaults.headers.common["Access-Control-Allow-Origin"] = 'http://localhost:8080';
                 $httpProvider.defaults.xsrfHeaderName = "X-XSRF-TOKEN";
                 $httpProvider.defaults.xsrfCookieName = "XSRF-TOKEN";
-            }]).run(function ($rootScope, $http, $cookies) {
+            }]).run(function ($rootScope, $http, $cookies, responseService) {
     $rootScope.headers = {};
-    $http.defaults.transformResponse.push(function (data, headers) {
-        // retrieve the injector instance for the PdfCutter module
-        //  var injector = angular.injector(['pdfcutter', 'ng']);
-
-        // attach the correct django CSRF Token for each ajax query
+    if ($cookies.get('XSRF-TOKEN')) {
+       // document.cookie = "XSRF-TOKEN=; expires=" + new Date(0).toUTCString() + "; path=/;"
+    }
+    $http.defaults.transformRequest.push(function (data, headers) {
         if ($cookies.get('XSRF-TOKEN')) {
-            $http.defaults.headers.common["X-XSRF-TOKEN"]= $cookies.get('XSRF-TOKEN');
-            headers()['X-XSRF-TOKEN'] = $cookies.get('XSRF-TOKEN');
+         //   document.cookie = "XSRF-TOKEN=; expires=" + new Date(0).toUTCString() + "; path=/;";
+        }
+        if ($cookies.get('XSRF-TOKEN')) {
+            $rootScope.headers["X-XSRF-TOKEN"] = $cookies.get('XSRF-TOKEN');
+//            $http.defaults.headers.common["X-XSRF-TOKEN"]= $cookies.get('XSRF-TOKEN');
+//            headers()['X-XSRF-TOKEN'] = $cookies.get('XSRF-TOKEN');
+        }
+        return data;
+    });
+    $http.defaults.transformResponse.push(function (data, headers) {
+
+        if (data && data.status) {
+            responseService.handleResponse(data.status);
         }
 
         return data;

@@ -13,7 +13,7 @@ angular.module('myApp.offers', ['ngRoute'])
 
         .controller('OffersCtrl', ["$http","$rootScope", function ($http,$rootScope) {
                 $http({
-                    method: 'GET',
+                    method: 'POST',
                      url: 'http://localhost:8080/offer/',
                      headers: $rootScope.headers
                 }).then(function successCallback(response) {

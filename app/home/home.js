@@ -13,7 +13,7 @@ angular.module('myApp.home', ['ngRoute'])
 .controller('homeCtrl', ["$rootScope", "$scope", "$http","$location", function ($rootScope, $scope, $http,$location) {
         $scope.logout = function () {
              $http({
-                        method: 'GET',
+                        method: 'POST',
                         headers: $rootScope.headers,
                         url: 'http://localhost:8080/logout'
                     }).success(function () {
