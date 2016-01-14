@@ -23,7 +23,6 @@ angular.module('myApp', [
 //  $httpProvider.defaults.xsrfHeaderName = 'X-XSRF-TOKEN';
                 $httpProvider.defaults.withCredentials = true;
                 $httpProvider.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';
-                $httpProvider.defaults.headers.common["Access-Control-Allow-Origin"] = 'http://localhost:8080';
                 $httpProvider.defaults.xsrfHeaderName = "X-XSRF-TOKEN";
                 $httpProvider.defaults.xsrfCookieName = "XSRF-TOKEN";
             }]).run(function ($rootScope, $http, $cookies, responseService) {
