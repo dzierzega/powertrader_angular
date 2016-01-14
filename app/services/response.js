@@ -1,6 +1,6 @@
 var module = angular.module('myApp.responseService', []);
 
-module.service('responseService', function ($location) {
+module.service('responseService', function ($location,$http,$rootScope) {
     this.handleResponse = function (status) {
         switch (status) {
             case 200:

@@ -27,6 +27,7 @@ angular.module('myApp', [
                 $httpProvider.defaults.xsrfCookieName = "XSRF-TOKEN";
             }]).run(function ($rootScope, $http, $cookies, responseService) {
     $rootScope.headers = {};
+    $rootScope.error = {};
     if ($cookies.get('XSRF-TOKEN')) {
        // document.cookie = "XSRF-TOKEN=; expires=" + new Date(0).toUTCString() + "; path=/;"
     }
@@ -34,11 +35,7 @@ angular.module('myApp', [
         if ($cookies.get('XSRF-TOKEN')) {
          //   document.cookie = "XSRF-TOKEN=; expires=" + new Date(0).toUTCString() + "; path=/;";
         }
-        if ($cookies.get('XSRF-TOKEN')) {
-            $rootScope.headers["X-XSRF-TOKEN"] = $cookies.get('XSRF-TOKEN');
-//            $http.defaults.headers.common["X-XSRF-TOKEN"]= $cookies.get('XSRF-TOKEN');
-//            headers()['X-XSRF-TOKEN'] = $cookies.get('XSRF-TOKEN');
-        }
+        
         return data;
     });
     $http.defaults.transformResponse.push(function (data, headers) {
@@ -46,7 +43,11 @@ angular.module('myApp', [
         if (data && data.status) {
             responseService.handleResponse(data.status);
         }
-
+if ($cookies.get('XSRF-TOKEN')) {
+            $rootScope.headers["X-XSRF-TOKEN"] = $cookies.get('XSRF-TOKEN');
+//            $http.defaults.headers.common["X-XSRF-TOKEN"]= $cookies.get('XSRF-TOKEN');
+//            headers()['X-XSRF-TOKEN'] = $cookies.get('XSRF-TOKEN');
+        }
         return data;
     });
 });

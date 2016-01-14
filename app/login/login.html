@@ -1,5 +1,5 @@
-<div class="alert alert-danger" ng-show="error">
-	There was a problem logging in. Please try again.
+<div class="alert alert-danger" ng-show="error.status">
+	{{error.message}}
 </div>
 <form role="form" ng-submit="login()">
 	<div class="form-group">

@@ -10,19 +10,9 @@ angular.module('myApp.home', ['ngRoute'])
                 });
                 $httpProvider.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';
 }])
-.controller('homeCtrl', ["$rootScope", "$scope", "$http","$location", function ($rootScope, $scope, $http,$location) {
+.controller('homeCtrl', ["$rootScope", "$scope", "$http","$location","userService", function ($rootScope, $scope, $http,$location,userService) {
         $scope.logout = function () {
-             $http({
-                        method: 'POST',
-                        headers: $rootScope.headers,
-                        url: 'http://localhost:8080/logout'
-                    }).success(function () {
-                $rootScope.authenticated = false;
-                $rootScope.headers = {};
-                $location.path("/");
-            }).error(function (data) {
-                $rootScope.authenticated = false;
-                $rootScope.headers = {};
-            });
+            userService.logout();
         }
+       
     }]);
