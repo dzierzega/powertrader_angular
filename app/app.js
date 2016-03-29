@@ -25,25 +25,37 @@ angular.module('myApp', [
                 $httpProvider.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';
                 $httpProvider.defaults.xsrfHeaderName = "X-XSRF-TOKEN";
                 $httpProvider.defaults.xsrfCookieName = "XSRF-TOKEN";
-            }]).run(function ($rootScope, $http, $cookies, responseService) {
+            }]).run(function ($rootScope, $http, $cookies, responseService,userService) {
+            
+            userService.getXsrfToken();
     $rootScope.headers = {};
     $rootScope.error = {};
+    if($cookies.get('token')){
+        $rootScope.authenticated = true;
+        $rootScope.headers['X-Auth-Token']= $cookies.get('token');
+        if($cookies.get('userDetails')){
+            $rootScope.user = JSON.parse($cookies.get('userDetails'));
+        }
+    }
     if ($cookies.get('XSRF-TOKEN')) {
-       // document.cookie = "XSRF-TOKEN=; expires=" + new Date(0).toUTCString() + "; path=/;"
+        // document.cookie = "XSRF-TOKEN=; expires=" + new Date(0).toUTCString() + "; path=/;"
     }
     $http.defaults.transformRequest.push(function (data, headers) {
         if ($cookies.get('XSRF-TOKEN')) {
-         //   document.cookie = "XSRF-TOKEN=; expires=" + new Date(0).toUTCString() + "; path=/;";
+            //   document.cookie = "XSRF-TOKEN=; expires=" + new Date(0).toUTCString() + "; path=/;";
         }
-        
+
         return data;
     });
     $http.defaults.transformResponse.push(function (data, headers) {
-
+        if(headers("x-auth-token")){
+            $rootScope.headers["X-Auth-Token"] = headers("x-auth-token");
+        }
         if (data && data.status) {
             responseService.handleResponse(data.status);
         }
-if ($cookies.get('XSRF-TOKEN')) {
+        
+        if ($cookies.get('XSRF-TOKEN')) {
             $rootScope.headers["X-XSRF-TOKEN"] = $cookies.get('XSRF-TOKEN');
 //            $http.defaults.headers.common["X-XSRF-TOKEN"]= $cookies.get('XSRF-TOKEN');
 //            headers()['X-XSRF-TOKEN'] = $cookies.get('XSRF-TOKEN');

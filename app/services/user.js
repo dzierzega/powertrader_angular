@@ -1,6 +1,6 @@
 var module = angular.module('myApp.userService', []);
 
-module.service('userService', function ($q, $rootScope, $location, $http) {
+module.service('userService', function ($q, $rootScope, $location, $http,$cookies) {
     this.login = function (username, password) {
         var defered = $q.defer();
         $rootScope.headers.Authorization = "Basic "
@@ -12,8 +12,8 @@ module.service('userService', function ($q, $rootScope, $location, $http) {
         }).success(function (data, status, headers, config) {
             $rootScope.error.status = false;
             $rootScope.authenticated = true;
-            $rootScope.user = {};
-            $rootScope.user.username = data.name;
+            $rootScope.user = data;
+            $cookies.put('userDetails',JSON.stringify(data));
             defered.resolve(data);
 
         }).error(function (data, status, headers, config) {
@@ -34,6 +34,7 @@ module.service('userService', function ($q, $rootScope, $location, $http) {
             url: 'http://localhost:8080/token'
         }).success(function (response) {
             $rootScope.headers["X-Auth-Token"] = response.token;
+            $cookies.put('token',response.token);
             delete $rootScope.headers.Authorization;
             $http({
                 method: 'GET',
@@ -56,9 +57,39 @@ module.service('userService', function ($q, $rootScope, $location, $http) {
             $rootScope.authenticated = false;
             $rootScope.headers = {};
             $location.path("/");
+            $cookies.remove('token');
+            $cookies.remove('userDetails');
         }).error(function (data) {
             $rootScope.authenticated = false;
             $rootScope.headers = {};
         });
     }
+    
+    this.getXsrfToken = function(){
+        $http({
+            method: 'GET',
+            url: 'http://localhost:8080/xtoken'
+        }).success(function () {
+        }).error(function (data) {
+        });
+    };
+    
+    this.register = function (user) {
+        var defered = $q.defer();
+        $http({
+             method: 'POST',
+                        url: 'http://localhost:8080/user/',
+                        data: user,
+                        headers: $rootScope.headers
+        }).success(function (data, status, headers, config) {
+
+            defered.resolve(data);
+
+        }).error(function (data, status, headers, config) {
+            alert(data.message);
+            defered.reject(data);
+        });
+        return defered.promise;
+    };
+
 });

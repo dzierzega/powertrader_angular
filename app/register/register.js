@@ -107,16 +107,16 @@ angular.module('myApp.register', ['ngRoute', 'ngMessages'])
                 }
             });
         })
-        .config(['$routeProvider',"$httpProvider", function ($routeProvider,$httpProvider) {
+        .config(['$routeProvider', "$httpProvider", function ($routeProvider, $httpProvider) {
                 $routeProvider.when('/register', {
                     templateUrl: 'register/register.html',
                     controller: 'RegisterCtrl',
                     controllerAs: 'vm'
                 });
-                 $httpProvider.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';
+                $httpProvider.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';
             }])
 
-        .controller('RegisterCtrl', ['$http', '$timeout', '$q', function ($http, $timeout, $q) {
+        .controller('RegisterCtrl', ['$http', '$timeout', '$q', '$rootScope', "userService", function ($http, $timeout, $q, $rootScope, userService) {
                 var vm = this;
                 vm.exitValidation = function () {
                     if (vm.model.password === vm.model.passwordConfirm) {
@@ -158,15 +158,24 @@ angular.module('myApp.register', ['ngRoute', 'ngMessages'])
                                                 placeholder: 'Enter Last Name',
                                                 required: true
                                             }
-                                        },{
+                                        }, {
                                             className: "col-md-4",
                                             key: 'username',
                                             type: 'input',
+                                            ngModelElAttrs: {
+                                                usernameValidator: ""
+                                            },
                                             templateOptions: {
                                                 type: 'text',
                                                 label: 'Username',
                                                 placeholder: 'Enter Username',
-                                                required: true
+                                                required: true,
+                                                onKeydown: function (value, options) {
+                                                    options.validation.show = false;
+                                                },
+                                                onBlur: function (value, options) {
+                                                    options.validation.show = null;
+                                                }
                                             }
                                         },
                                         {
@@ -184,7 +193,7 @@ angular.module('myApp.register', ['ngRoute', 'ngMessages'])
                                             key: 'email',
                                             type: 'input',
                                             ngModelElAttrs: {
-                                                usernameValidator:""
+                                                emailValidator: ""
                                             },
                                             templateOptions: {
                                                 type: 'email',
@@ -230,11 +239,11 @@ angular.module('myApp.register', ['ngRoute', 'ngMessages'])
                                                 options: [
                                                     {
                                                         name: "Customer",
-                                                        value: "customer"
+                                                        value: "CUSTOMER"
                                                     },
                                                     {
                                                         name: "Company",
-                                                        value: "company"
+                                                        value: "COMPANY"
                                                     }
                                                 ]
                                             }
@@ -264,7 +273,7 @@ angular.module('myApp.register', ['ngRoute', 'ngMessages'])
                                                 passwordConfirm: {
                                                     expression: function (viewValue, modelValue, vm) {
                                                         vm.form[vm.form.$name + '_input_passwordConfirm_2'].$validate();
-                                                      //  vm.form.formly_1_input_passwordConfirm_2.$validate();
+                                                        //  vm.form.formly_1_input_passwordConfirm_2.$validate();
                                                         return true;
                                                     },
                                                     message: '"Password and password confirmation must be the same!"'
@@ -309,7 +318,7 @@ angular.module('myApp.register', ['ngRoute', 'ngMessages'])
                                         },
                                         {
                                             className: "col-md-4",
-                                            key: 'powerAmount',
+                                            key: 'userDetail.powerAmount',
                                             ngModelAttrs: {
                                                 customAttrVal: {
                                                     attribute: "step"
@@ -325,7 +334,7 @@ angular.module('myApp.register', ['ngRoute', 'ngMessages'])
                                             }
                                         },
                                         {
-                                            key: "unit",
+                                            key: "userDetail.unit",
                                             className: "col-md-2",
                                             type: "select",
                                             templateOptions: {
@@ -344,7 +353,7 @@ angular.module('myApp.register', ['ngRoute', 'ngMessages'])
                                             }
                                         },
                                         {
-                                            key: "from",
+                                            key: "userDetail.usageFrom",
                                             className: "col-md-3",
                                             type: "timepicker",
                                             templateOptions: {
@@ -352,7 +361,7 @@ angular.module('myApp.register', ['ngRoute', 'ngMessages'])
                                             }
                                         },
                                         {
-                                            key: "to",
+                                            key: "userDetail.usageTo",
                                             className: "col-md-3",
                                             type: "timepicker",
                                             templateOptions: {
@@ -363,7 +372,7 @@ angular.module('myApp.register', ['ngRoute', 'ngMessages'])
                                             template: "</div>"
                                         },
                                     ],
-                                    hideExpression: "model.userType!='customer'"
+                                    hideExpression: "model.userType!='CUSTOMER'"
                                 },
                                 {
                                     fieldGroup: [
@@ -396,7 +405,7 @@ angular.module('myApp.register', ['ngRoute', 'ngMessages'])
                                             template: "</div>"
                                         },
                                     ],
-                                    hideExpression: "model.userType!='company'"
+                                    hideExpression: "model.userType!='COMPANY'"
                                 },
                                 {
                                     fieldGroup: [
@@ -422,7 +431,8 @@ angular.module('myApp.register', ['ngRoute', 'ngMessages'])
                     $http({
                         method: 'POST',
                         url: 'http://localhost:8080/user/',
-                        data: user
+                        data: user,
+                        headers: $rootScope.headers,
                     }).then(function successCallback(response) {
                         // this callback will be called asynchronously
                         // when the response is available
@@ -434,41 +444,55 @@ angular.module('myApp.register', ['ngRoute', 'ngMessages'])
                     });
                 }
                 function finishWizard() {
-                    $http({
-                        method: 'POST',
-                        url: 'http://localhost:8080/user/',
-                        data: vm.model
-                    }).then(function successCallback(response) {
-                        // this callback will be called asynchronously
-                        // when the response is available
-                        alert(response);
-                    }, function errorCallback(response) {
-                        // called asynchronously if an error occurs
-                        // or server returns response with an error status.
-                        alert(response);
+
+                    userService.register(vm.model).then(function (data) {
+
                     });
-                    // alert(JSON.stringify(vm.model), null, 2);
                 }
                 ;
             }
-        ]).directive('usernamevalidator', function($http, $q) {
+        ]).directive('usernamevalidator', function ($http, $q) {
     return {
         require: 'ngModel',
-        link: function(scope, element, attrs, ngModel) {
-            ngModel.$asyncValidators.email = function(modelValue, viewValue) {
+        scope: {},
+        link: function (scope, element, attrs, ngModel, $rootScope) {
+            ngModel.$asyncValidators.email = function (modelValue, viewValue) {
                 return $http({
                     method: 'GET',
-                    url: 'http://localhost:8080/user/find/' + viewValue
+                    url: 'http://localhost:8080/user/find/username/' + viewValue,
+                    headers: scope.$root.headers
                 }).then(
-                    function(response) {
-                        if (response.data) {
-                            return $q.reject(response.data.errorMessage);
+                        function (response) {
+                            if (response.data) {
+                                return $q.reject(response.data.errorMessage);
+                            }
+                            return true;
                         }
-                        return true;
-                    }
                 );
             };
         }
     };
-});;
+}).directive('emailvalidator', function ($http, $q) {
+    return {
+        require: 'ngModel',
+        scope: {},
+        link: function (scope, element, attrs, ngModel, $rootScope) {
+            ngModel.$asyncValidators.username = function (modelValue, viewValue) {
+                return $http({
+                    method: 'GET',
+                    url: 'http://localhost:8080/user/find/email/' + viewValue,
+                    headers: scope.$root.headers
+                }).then(
+                        function (response) {
+                            if (response.data) {
+                                return $q.reject(response.data.errorMessage);
+                            }
+                            return true;
+                        }
+                );
+            };
+        }
+    };
+});
+;
 
